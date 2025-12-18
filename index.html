@@ -1,67 +1,474 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yussef Designs</title>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yussef Designs | High-Impact Thumbnails</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              neon: '#CCFF00',
-              dark: '#0a0a0a', // Deep Black/Charcoal
-              card: '#111111',
-            },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            animation: {
-              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            }
-          },
-        },
-      }
-    </script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neon: '#CCFF00',
+                        dark: '#0a0a0a',
+                        card: '#111111',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    
     <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0a0a0a;
-        color: white;
-        overflow-x: hidden;
-      }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #0a0a0a;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #333;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #CCFF00;
-      }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #CCFF00; }
+
+        /* --- Background Particles & Orbs --- */
+        .mesh-gradient {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(140px);
+            opacity: 0.15;
+            transition: transform 0.2s ease-out;
+        }
+
+        .orb-1 { width: 600px; height: 600px; background: #CCFF00; top: -10%; left: -5%; animation: float1 25s infinite alternate; }
+        .orb-2 { width: 700px; height: 700px; background: #3b82f6; top: 40%; right: -10%; animation: float2 30s infinite alternate; }
+
+        @keyframes float1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(100px, 150px) scale(1.1); } }
+        @keyframes float2 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-120px, -80px) scale(1.2); } }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- UI Effects --- */
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-20deg);
+            transition: 0.7s;
+        }
+        .shimmer-btn:hover::after {
+            left: 150%;
+        }
+
+        .spotlight-card {
+            position: relative;
+            background: #111;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: border-color 0.5s;
+        }
+        .spotlight-card:hover {
+            border-color: rgba(204, 255, 0, 0.5);
+        }
+        .spotlight-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            background: radial-gradient(600px circle at var(--x) var(--y), rgba(204,255,0,0.1), transparent 40%);
+        }
+        .spotlight-card:hover::before {
+            opacity: 1;
+        }
+
+        #nav-indicator {
+            position: absolute;
+            background: rgba(255,255,255,0.05);
+            border-radius: 9999px;
+            z-index: -1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        .terminal-scan::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: rgba(204,255,0,0.3);
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        .notification {
+            transform: translate(-50%, 100px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .notification.visible {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
     "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
-    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+    "react": "https://esm.sh/react@^19.2.3"
   }
 }
 </script>
 </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<body class="selection:bg-neon selection:text-black">
+
+    <!-- Background Elements -->
+    <div class="grain"></div>
+    <div class="mesh-gradient" id="bg-parallax">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="absolute inset-0 z-10 opacity-10" style="background-image: linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px); background-size: 100px 100px; mask-image: radial-gradient(circle at 50% 50%, black 20%, transparent 100%);"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-8 left-0 right-0 z-50 flex justify-center px-4">
+        <div class="backdrop-blur-xl bg-black/60 border border-white/10 rounded-full px-4 py-2 flex items-center gap-2 shadow-2xl relative" id="nav-container">
+            <div id="nav-indicator"></div>
+            <div class="flex gap-1">
+                <a href="#work" class="nav-link px-6 py-2.5 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors duration-300">Work</a>
+                <a href="#pricing" class="nav-link px-6 py-2.5 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors duration-300">Pricing</a>
+                <a href="#contact" class="nav-link px-6 py-2.5 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors duration-300">Contact</a>
+            </div>
+            <div class="w-px h-6 bg-white/10 mx-2"></div>
+            <button onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" class="shimmer-btn px-6 py-2.5 rounded-full bg-neon text-black text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(204,255,0,0.3)] hover:scale-105 active:scale-95 transition-transform">
+                Hire Me
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="min-h-[95vh] flex flex-col items-center justify-center text-center px-4 pt-32 pb-20">
+            <div class="mb-8 px-4 py-1.5 rounded-full border border-neon/20 bg-neon/5 text-neon text-xs font-bold tracking-widest uppercase flex items-center gap-2">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-neon"></span>
+                </span>
+                Available for new projects
+            </div>
+
+            <h1 class="text-5xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] max-w-6xl mx-auto mb-10">
+                THUMBNAILS THAT <br />
+                <span class="relative inline-block">
+                    <span class="text-neon italic underline decoration-4 underline-offset-8">STAND OUT</span>
+                    <div class="absolute -inset-1 bg-neon/20 blur-2xl -z-10 animate-pulse"></div>
+                </span>
+            </h1>
+
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-12 font-medium">
+                Elevate your content with high-conversion visuals. Helping creators dominate the algorithm with bold strategy and elite design.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-6">
+                <button onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})" class="shimmer-btn bg-neon text-black text-lg font-black px-10 py-4 rounded-full flex items-center gap-2 shadow-[0_0_30px_rgba(204,255,0,0.3)] hover:scale-105 active:scale-95 transition-transform">
+                    See Portfolio <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+                <button onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" class="shimmer-btn bg-white/5 border border-white/10 text-white text-lg font-black px-10 py-4 rounded-full flex items-center gap-2 hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all">
+                    Send me a message <i data-lucide="message-square" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Work Grid -->
+        <section id="work" class="py-32 px-4 max-w-7xl mx-auto">
+            <div class="mb-20 text-center">
+                <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tighter uppercase">SELECTED <span class="text-neon italic">WORKS</span></h2>
+                <div class="h-1 w-12 bg-neon mx-auto rounded-full"></div>
+            </div>
+            <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-32 px-4 max-w-7xl mx-auto">
+            <div class="mb-20 text-center">
+                <div class="inline-block px-4 py-1 rounded-full border border-neon/30 text-neon text-[10px] font-black tracking-[0.3em] uppercase mb-4">Investment</div>
+                <h2 class="text-4xl md:text-7xl font-black mb-4 tracking-tighter uppercase">PRICING <span class="text-neon italic">SYSTEM</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start">
+                <!-- Basic -->
+                <div class="group relative rounded-3xl p-10 border border-white/5 bg-zinc-950 hover:border-white/20 transition-all duration-500 h-full flex flex-col">
+                    <h3 class="text-xl font-black mb-2 tracking-widest">BASIC</h3>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-5xl font-black text-white">$5</span>
+                        <span class="text-gray-500 font-bold">/THUMB</span>
+                    </div>
+                    <ul class="space-y-5 mb-10 flex-grow">
+                        <li class="flex items-start gap-4 text-sm font-semibold text-gray-300">
+                            <div class="p-1 rounded-md bg-white/5 text-neon"><i data-lucide="check" class="w-4 h-4"></i></div> 1 Concept
+                        </li>
+                        <li class="flex items-start gap-4 text-sm font-semibold text-gray-300">
+                            <div class="p-1 rounded-md bg-white/5 text-neon"><i data-lucide="check" class="w-4 h-4"></i></div> 2 Revisions
+                        </li>
+                    </ul>
+                    <button class="shimmer-btn w-full py-4 rounded-2xl bg-white/5 text-white border border-white/10 font-black uppercase hover:bg-white hover:text-black transition-all">Get Started</button>
+                </div>
+                <!-- Pro -->
+                <div class="group relative rounded-3xl p-10 border border-neon bg-zinc-900 shadow-[0_0_50px_rgba(204,255,0,0.1)] scale-105 z-10 flex flex-col">
+                    <div class="absolute -top-4 right-10 bg-neon text-black text-[10px] font-black px-6 py-2 rounded-full tracking-widest uppercase">Best Value</div>
+                    <h3 class="text-xl font-black mb-2 tracking-widest text-neon">PRO</h3>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-5xl font-black text-white">$15</span>
+                        <span class="text-gray-500 font-bold">/THUMB</span>
+                    </div>
+                    <ul class="space-y-5 mb-10 flex-grow">
+                        <li class="flex items-start gap-4 text-sm font-semibold text-gray-300">
+                            <div class="p-1 rounded-md bg-neon text-black"><i data-lucide="check" class="w-4 h-4"></i></div> 2 Concepts
+                        </li>
+                        <li class="flex items-start gap-4 text-sm font-semibold text-gray-300">
+                            <div class="p-1 rounded-md bg-neon text-black"><i data-lucide="check" class="w-4 h-4"></i></div> Unlimited Revisions
+                        </li>
+                        <li class="flex items-start gap-4 text-sm font-semibold text-gray-300">
+                            <div class="p-1 rounded-md bg-neon text-black"><i data-lucide="check" class="w-4 h-4"></i></div> Priority Support
+                        </li>
+                    </ul>
+                    <button class="shimmer-btn w-full py-4 rounded-2xl bg-neon text-black font-black uppercase shadow-[0_10px_30px_rgba(204,255,0,0.2)] hover:scale-105 transition-transform">Get Started</button>
+                </div>
+                <!-- Elite -->
+                <div class="group relative rounded-3xl p-10 border border-white/5 bg-zinc-950 hover:border-white/20 transition-all duration-500 h-full flex flex-col">
+                    <h3 class="text-xl font-black mb-2 tracking-widest">ELITE</h3>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-5xl font-black text-white">$60</span>
+                        <span class="text-gray-500 font-bold">/THUMB</span>
+                    </div>
+                    <ul class="space-y-5 mb-10 flex-grow">
+                        <li class="flex items-start gap-4 text-sm font-semibold text-gray-300">
+                            <div class="p-1 rounded-md bg-white/5 text-neon"><i data-lucide="check" class="w-4 h-4"></i></div> 5 Concepts
+                        </li>
+                        <li class="flex items-start gap-4 text-sm font-semibold text-gray-300">
+                            <div class="p-1 rounded-md bg-white/5 text-neon"><i data-lucide="check" class="w-4 h-4"></i></div> Dedicated Designer
+                        </li>
+                    </ul>
+                    <button class="shimmer-btn w-full py-4 rounded-2xl bg-white/5 text-white border border-white/10 font-black uppercase hover:bg-white hover:text-black transition-all">Get Started</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 px-4 bg-gradient-to-t from-black via-black to-transparent">
+            <div class="max-w-2xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-black mb-2 tracking-tighter uppercase">MESSAGE ME</h2>
+                </div>
+                <div class="relative bg-[#0a0a0a] border border-neon/30 rounded-xl p-1 shadow-[0_0_40px_rgba(204,255,0,0.1)] overflow-hidden terminal-scan">
+                    <div class="bg-zinc-900/80 border-b border-white/5 px-4 py-2 flex items-center justify-between">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-10 relative">
+                        <form id="contact-form" class="space-y-6">
+                            <div class="space-y-2">
+                                <label class="text-xs font-mono text-neon tracking-widest uppercase flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-neon rounded-full animate-pulse"></span> Email
+                                </label>
+                                <input type="email" name="email" required placeholder="ENTER_EMAIL_ADDRESS..." class="w-full bg-black/40 border border-white/10 text-white font-mono text-sm p-4 focus:outline-none focus:border-neon transition-all placeholder-gray-700">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-mono text-neon tracking-widest uppercase flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-neon rounded-full animate-pulse"></span> Transmission Data
+                                </label>
+                                <textarea name="message" required placeholder="INITIALIZE_MESSAGE_SEQUENCE..." rows="5" class="w-full bg-black/40 border border-white/10 text-white font-mono text-sm p-4 focus:outline-none focus:border-neon transition-all placeholder-gray-700 resize-none"></textarea>
+                            </div>
+                            <button type="submit" id="submit-btn" class="w-full shimmer-btn bg-neon text-black font-black py-4 px-6 flex items-center justify-center gap-3 hover:shadow-[0_0_25px_rgba(204,255,0,0.4)]">
+                                <span class="tracking-widest">EXECUTE SEND</span>
+                                <i data-lucide="send" class="w-5 h-5"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-8 text-center text-gray-600 text-xs">
+            <p>© <span id="year"></span> Yussef Designs. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-zinc-900 border border-neon/50 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 min-w-[320px] opacity-0 pointer-events-none">
+        <i data-lucide="check-circle" class="text-neon flex-shrink-0 w-6 h-6"></i>
+        <p class="text-sm font-medium" id="notif-message"></p>
+    </div>
+
+    <script>
+        // --- Data ---
+        const projects = [
+            { id: 1, title: 'FIFA Thumbnail', imageUrl: 'https://i.postimg.cc/3x45CPN0/FIFA-THUMBNAIL.png' },
+            { id: 2, title: 'Gaming Highlights', imageUrl: 'https://i.postimg.cc/HLD3wy7g/FINAL-THUMBNAIL-sdam.png' },
+            { id: 3, title: 'Vlog Daily', imageUrl: 'https://i.postimg.cc/JzG8rBQh/FINAM-THUMBNAIL-mrjaʿt.png' },
+            { id: 4, title: 'Dopamine Detox', imageUrl: 'https://i.postimg.cc/8Cfpc7LP/dopmine-detox-final.png' },
+            { id: 5, title: 'UFC 5', imageUrl: 'https://i.postimg.cc/Gpxq6XsQ/UFC5.png' },
+            { id: 6, title: 'Travel Vlog', imageUrl: 'https://i.postimg.cc/jjHFtsBx/thumbnail-1765369636265.png' },
+            { id: 7, title: 'David Laid', imageUrl: 'https://i.postimg.cc/tTzL4bSL/david-laid-thumbnail.png' },
+            { id: 8, title: 'Final Thumbnail', imageUrl: 'https://i.postimg.cc/59g6ZF3Z/final-thumbail.png' },
+            { id: 9, title: 'The Great Escape', imageUrl: 'https://i.postimg.cc/DwJ0JpK6/THE-GREAT-ESPASE.png' },
+            { id: 10, title: 'PC Build', imageUrl: 'https://i.postimg.cc/LXHmTNrP/bna-pc.png' },
+            { id: 11, title: 'Trending', imageUrl: 'https://i.postimg.cc/rsHcqczL/THUMBNAIL-TRANDING.png' },
+            { id: 12, title: 'Ghzi', imageUrl: 'https://i.postimg.cc/xjZSJfTQ/iuane-ghzi-thumbnail-(1).png' },
+            { id: 13, title: 'Only AI', imageUrl: 'https://i.postimg.cc/VshcrfLr/ONLY-AI.png' },
+            { id: 14, title: 'Yumi', imageUrl: 'https://i.postimg.cc/8cmKbbgk/thumbnail-yumi.png' },
+            { id: 15, title: 'Thumbnail', imageUrl: 'https://i.postimg.cc/1tpJ9KtX/THUMBNAOIL.png' },
+            { id: 16, title: 'Faklaydhm', imageUrl: 'https://i.postimg.cc/qq4QgC6J/faʿklaydhm.png' },
+            { id: 17, title: 'Loma', imageUrl: 'https://i.postimg.cc/sxTPXHRc/loma.png' },
+            { id: 18, title: 'Ronaldo', imageUrl: 'https://i.postimg.cc/13n0mK75/RONLDO-THUMBAIL.png' },
+            { id: 19, title: 'Growth', imageUrl: 'https://i.postimg.cc/GthkMMD2/level-devel-thumn.png' },
+            { id: 20, title: 'Clash', imageUrl: 'https://i.postimg.cc/GmZVZDqb/cscscscsc.png' },
+            { id: 21, title: 'Cinematic', imageUrl: 'https://i.postimg.cc/1zsbKqBh/Universal-Upscaler-e3d008cc-a878-458d-90bd-be08449f20cc.jpg' },
+            { id: 22, title: 'Setup', imageUrl: 'https://i.postimg.cc/63Bgtzh4/thumbnail-setup.png' },
+            { id: 23, title: 'Money', imageUrl: 'https://i.postimg.cc/ZqdH0pMS/thumbnail-monry.png' },
+            { id: 24, title: 'Thumbnail', imageUrl: 'https://i.postimg.cc/VkY5J8Zj/THUMBNAL.png' }
+        ];
+
+        // --- Core Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            document.getElementById('year').innerText = new Date().getFullYear();
+
+            // Render Projects
+            const grid = document.getElementById('portfolio-grid');
+            projects.forEach((proj, idx) => {
+                const card = document.createElement('div');
+                card.className = 'spotlight-card group';
+                card.innerHTML = `
+                    <div class="aspect-video w-full overflow-hidden">
+                        <img src="${proj.imageUrl}" alt="${proj.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                `;
+                
+                // Spotlight Mouse Tracking
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--x', `${x}px`);
+                    card.style.setProperty('--y', `${y}px`);
+                });
+
+                grid.appendChild(card);
+            });
+
+            // Parallax BG
+            const orbs = document.querySelectorAll('.orb');
+            window.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 40;
+                const y = (e.clientY / window.innerHeight - 0.5) * 40;
+                orbs.forEach((orb, i) => {
+                    const factor = i === 0 ? 0.5 : -0.5;
+                    orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+                });
+            });
+
+            // Nav Indicator
+            const navLinks = document.querySelectorAll('.nav-link');
+            const indicator = document.getElementById('nav-indicator');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    indicator.style.opacity = '1';
+                    indicator.style.width = `${link.offsetWidth}px`;
+                    indicator.style.height = `${link.offsetHeight}px`;
+                    indicator.style.left = `${link.offsetLeft}px`;
+                    indicator.style.top = `${link.offsetTop}px`;
+                });
+            });
+            document.getElementById('nav-container').addEventListener('mouseleave', () => {
+                indicator.style.opacity = '0';
+            });
+
+            // Contact Form
+            const contactForm = document.getElementById('contact-form');
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('submit-btn');
+                const originalText = btn.innerHTML;
+                
+                btn.disabled = true;
+                btn.innerHTML = `<span class="animate-spin">⌛</span> UPLOADING...`;
+
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData);
+
+                try {
+                    const response = await fetch("https://formspree.io/f/xpwvnopr", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        showNotification("ACCESS GRANTED: MESSAGE SENT");
+                        contactForm.reset();
+                    } else {
+                        showNotification("TRANSMISSION ERROR: RETRY");
+                    }
+                } catch {
+                    showNotification("SYSTEM FAILURE: CHECK CONNECTION");
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            });
+        });
+
+        // Toast Helper
+        function showNotification(msg) {
+            const toast = document.getElementById('notification');
+            const message = document.getElementById('notif-message');
+            message.innerText = msg;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 4000);
+        }
+    </script>
+</body>
 </html>
